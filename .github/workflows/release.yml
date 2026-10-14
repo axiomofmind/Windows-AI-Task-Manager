@@ -1,0 +1,53 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  portable-windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: src/AITaskManager.Web/package-lock.json
+
+      - run: dotnet restore --locked-mode
+      - run: npm ci --prefix src/AITaskManager.Web
+      - name: Run release gates
+        shell: pwsh
+        run: ./scripts/Test-Release.ps1
+      - name: Build, validate, and package
+        shell: pwsh
+        run: |
+          $version = '${{ github.ref_name }}'.TrimStart('v')
+          ./scripts/Publish-Portable.ps1 -Version $version
+
+      - name: Publish GitHub prerelease
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create '${{ github.ref_name }}' artifacts/*.zip artifacts/*.sha256 `
+            --verify-tag `
+            --prerelease `
+            --generate-notes `
+            --title 'AI Task Manager ${{ github.ref_name }}'

@@ -1,0 +1,47 @@
+:root {
+  font-family: Inter, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  color: #c9d9e8;
+  background: #05090e;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --surface: #081019;
+  --panel: #0b1520;
+  --panel-raised: #0e1b28;
+  --line: #183046;
+  --line-bright: #24506f;
+  --text: #d9e8f5;
+  --muted: #6f879a;
+  --cyan: #43cbff;
+  --cyan-soft: #2282a6;
+  --green: #58e5ac;
+  --amber: #ffbd52;
+  --red: #ff6678;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { min-width: 320px; min-height: 100%; margin: 0; }
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    linear-gradient(rgb(30 72 101 / 7%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(30 72 101 / 7%) 1px, transparent 1px),
+    radial-gradient(circle at 50% -20%, rgb(34 130 166 / 14%), transparent 42%),
+    #05090e;
+  background-size: 32px 32px, 32px 32px, auto, auto;
+}
+
+button, input, select, textarea { font: inherit; }
+button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+::selection { color: #001018; background: var(--cyan); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

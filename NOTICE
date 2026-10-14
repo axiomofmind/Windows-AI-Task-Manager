@@ -1,0 +1,9 @@
+AI Task Manager
+Copyright 2026 AI Task Manager contributors
+
+This product is being developed as an independent implementation. It does not
+include Fan Control, NVIDIA driver binaries, models, datasets, or checkpoints.
+
+Third-party dependency names, versions, licenses, and upstream locations are
+recorded in THIRD-PARTY-NOTICES.md. The release SBOM is the authoritative
+machine-readable inventory for a particular artifact.

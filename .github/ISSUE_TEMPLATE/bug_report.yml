@@ -1,0 +1,39 @@
+name: Bug report
+description: Report reproducible incorrect behavior without including secrets or private workload data.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Remove usernames, local paths, API keys, prompts, and model contents before submitting diagnostics.
+  - type: input
+    id: version
+    attributes:
+      label: AI Task Manager version
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows and NVIDIA driver versions
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and reproduction steps
+    validations:
+      required: true
+  - type: checkboxes
+    id: redaction
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed secrets, prompts, usernames, and private local paths.
+          required: true

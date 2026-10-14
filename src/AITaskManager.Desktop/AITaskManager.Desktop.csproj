@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\AITaskManager.Adapters.Nvidia\AITaskManager.Adapters.Nvidia.csproj" />
+    <ProjectReference Include="..\AITaskManager.Application\AITaskManager.Application.csproj" />
+    <ProjectReference Include="..\AITaskManager.Hosting\AITaskManager.Hosting.csproj" />
+    <ProjectReference Include="..\AITaskManager.Infrastructure.Windows\AITaskManager.Infrastructure.Windows.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Web.WebView2" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\aitaskmanager.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\aitaskmanager.ico" />
+  </ItemGroup>
+
+  <Target Name="BuildWebAssets" BeforeTargets="Build" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Exec WorkingDirectory="..\AITaskManager.Web" Command="npm ci" Condition="!Exists('..\AITaskManager.Web\node_modules')" />
+    <Exec WorkingDirectory="..\AITaskManager.Web" Command="npm run build" />
+    <ItemGroup>
+      <_WebAsset Include="..\AITaskManager.Web\dist\**\*" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(_WebAsset)"
+      DestinationFiles="@(_WebAsset->'$(OutDir)wwwroot\%(RecursiveDir)%(Filename)%(Extension)')"
+      SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopyWebAssetsToPublish" AfterTargets="Publish">
+    <ItemGroup>
+      <_PublishedWebAsset Include="..\AITaskManager.Web\dist\**\*" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(_PublishedWebAsset)"
+      DestinationFiles="@(_PublishedWebAsset->'$(PublishDir)wwwroot\%(RecursiveDir)%(Filename)%(Extension)')"
+      SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

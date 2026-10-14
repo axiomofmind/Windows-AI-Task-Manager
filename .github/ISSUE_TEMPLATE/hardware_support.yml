@@ -1,0 +1,40 @@
+name: Unsupported hardware or driver
+description: Report read-only capability or qualification behavior for an NVIDIA GPU.
+title: "[Hardware]: "
+labels: [hardware]
+body:
+  - type: markdown
+    attributes:
+      value: Do not perform fan or power qualification on production workloads. Never include GPU UUIDs or board serial numbers.
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU model and board vendor
+    validations:
+      required: true
+  - type: input
+    id: driver
+    attributes:
+      label: NVIDIA driver and VBIOS versions
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows edition and build
+    validations:
+      required: true
+  - type: textarea
+    id: capability
+    attributes:
+      label: Capability result
+      description: State which field or documented NVML operation was unsupported, unavailable, or permission denied.
+    validations:
+      required: true
+  - type: checkboxes
+    id: redaction
+    attributes:
+      label: Redaction
+      options:
+        - label: I removed GPU UUIDs, serial numbers, usernames, private paths, models, prompts, and secrets.
+          required: true

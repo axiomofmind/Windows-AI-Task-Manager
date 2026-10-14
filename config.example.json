@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "server": {
+    "listenUrl": "http://127.0.0.1:7312",
+    "allowedOrigins": [
+      "http://127.0.0.1:5173",
+      "http://localhost:5173"
+    ]
+  },
+  "storage": {
+    "dataDirectory": "",
+    "logDirectory": "",
+    "databaseFileName": "aitaskmanager.db",
+    "metricRetentionDays": 30,
+    "logRetentionDays": 14
+  },
+  "collection": {
+    "activeIntervalSeconds": 1,
+    "idleIntervalSeconds": 5,
+    "sourceTimeoutSeconds": 3,
+    "staleAfterMultiplier": 3
+  },
+  "discovery": {
+    "enableLocalRuntimeDiscovery": true,
+    "runtimeEndpoints": [],
+    "modelRoots": [],
+    "trainingRoots": [],
+    "datasetRoots": []
+  },
+  "alerts": {
+    "gpuTemperatureWarningCelsius": 85,
+    "vramWarningPercent": 95
+  },
+  "desktop": {
+    "closeToTray": true,
+    "startMinimized": false
+  },
+  "actions": {
+    "enabled": true,
+    "powerControlEnabled": true,
+    "fanControlEnabled": true,
+    "powerControl": {
+      "confirmationSeconds": 10,
+      "restoreOnExit": true
+    },
+    "fanControl": {
+      "watchdogSeconds": 5,
+      "failsafeTemperatureCelsius": 90,
+      "restoreOnExit": true
+    }
+  }
+}

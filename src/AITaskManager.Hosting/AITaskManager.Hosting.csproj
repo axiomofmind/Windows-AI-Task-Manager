@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\AITaskManager.Adapters.LlamaCpp\AITaskManager.Adapters.LlamaCpp.csproj" />
+    <ProjectReference Include="..\AITaskManager.Adapters.Nvidia\AITaskManager.Adapters.Nvidia.csproj" />
+    <ProjectReference Include="..\AITaskManager.Application\AITaskManager.Application.csproj" />
+    <ProjectReference Include="..\AITaskManager.Contracts\AITaskManager.Contracts.csproj" />
+    <ProjectReference Include="..\AITaskManager.Infrastructure.Windows\AITaskManager.Infrastructure.Windows.csproj" />
+    <ProjectReference Include="..\AITaskManager.Persistence\AITaskManager.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

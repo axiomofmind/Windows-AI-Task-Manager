@@ -1,0 +1,94 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: src/AITaskManager.Web/package-lock.json
+
+      - name: Restore .NET dependencies
+        run: dotnet restore --locked-mode
+
+      - name: Build .NET solution
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Verify C# formatting
+        run: dotnet format --no-restore --verify-no-changes
+
+      - name: Test .NET solution
+        run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --results-directory TestResults
+
+      - name: Install web dependencies
+        run: npm ci --prefix src/AITaskManager.Web
+
+      - name: Lint web application
+        run: npm run lint --prefix src/AITaskManager.Web
+
+      - name: Type-check web application
+        run: npm test --prefix src/AITaskManager.Web
+
+      - name: Build web application
+        run: npm run build --prefix src/AITaskManager.Web
+
+      - name: Audit dependencies
+        shell: pwsh
+        run: |
+          ./scripts/Test-NuGetVulnerabilities.ps1
+          npm audit --prefix src/AITaskManager.Web --audit-level=high
+
+      - name: Check repository hygiene
+        shell: pwsh
+        run: ./scripts/Test-RepositoryHygiene.ps1
+
+      - name: Build portable alpha artifact
+        shell: pwsh
+        run: ./scripts/Publish-Portable.ps1
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: test-results
+          path: TestResults
+          if-no-files-found: ignore
+
+      - name: Upload portable artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: aitaskmanager-win-x64
+          path: |
+            artifacts/*.zip
+            artifacts/*.sha256
+          if-no-files-found: error
+          compression-level: 0

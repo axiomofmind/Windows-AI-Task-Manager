@@ -1,0 +1,23 @@
+name: Feature request
+description: Propose a dashboard, runtime, trainer, or hardware capability.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Explain the operational problem rather than only the proposed interface.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Documented APIs or data sources
+      description: Required for runtime integrations and hardware controls.

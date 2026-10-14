@@ -1,0 +1,31 @@
+name: Runtime adapter request
+description: Request or report compatibility for a local AI runtime.
+title: "[Runtime]: "
+labels: [runtime]
+body:
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime and version
+      placeholder: llama.cpp build, LM Studio version, or other runtime
+    validations:
+      required: true
+  - type: textarea
+    id: endpoints
+    attributes:
+      label: Documented local endpoints
+      description: List official health, model, metrics, or slot APIs. Remove tokens and private paths.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected telemetry
+      description: Model, context, KV cache, queue, throughput, process identity, or other fields.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy review
+      options:
+        - label: I removed prompts, responses, secrets, usernames, and private filesystem paths.
+          required: true
