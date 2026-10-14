@@ -122,6 +122,15 @@
 .gpu-card-grid--compact .gpu-card > header { min-height: 48px; }
 .gpu-card-grid--compact .gpu-card > header > small, .gpu-card-grid--compact .gpu-secondary { display: none; }
 .gpu-card-grid--compact .metric-dial strong { font-size: 17px; }
+.gpu-fan-deck { padding: 13px; border-top: 1px solid #1f4659; background: linear-gradient(180deg, rgb(88 229 172 / 3%), rgb(5 13 20 / 35%)); }
+.gpu-fan-deck__status { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; font-family: Consolas, monospace; }
+.gpu-fan-deck__status span { overflow: hidden; color: var(--green); font-size: 8px; letter-spacing: .1em; text-overflow: ellipsis; white-space: nowrap; }
+.gpu-fan-deck__status strong { grid-row: span 2; color: var(--green); font-size: 18px; }
+.gpu-fan-deck__status small { color: #58758a; font-size: 7px; letter-spacing: .07em; text-transform: uppercase; }
+.gpu-fan-deck > input[type="range"] { width: 100%; margin: 12px 0; accent-color: var(--green); cursor: pointer; }
+.gpu-fan-deck > input[type="range"]:disabled { cursor: not-allowed; opacity: .35; }
+.gpu-fan-actions button { min-height: 34px; font-size: 8px; }
+.gpu-fan-deck__note { display: block; margin-top: 9px; color: #516d80; font: 7px/1.4 Consolas, monospace; letter-spacing: .04em; text-transform: uppercase; }
 
 .runtime-panel { min-height: 390px; }
 .runtime-list { padding: 12px; }

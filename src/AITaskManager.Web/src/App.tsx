@@ -223,6 +223,15 @@ type FanActionResult = {
 
 type PendingFanAction = { gpu: Gpu; duty: number }
 
+type GpuFanControls = {
+  enabled: boolean
+  restoreAvailable: boolean
+  states: FanControlStateCollection | null
+  busy: boolean
+  onRequest: (action: PendingFanAction, activeSession: boolean) => void
+  onRestore: (gpu: Gpu) => void
+}
+
 type ConnectionState = 'connecting' | 'online' | 'offline'
 type ViewId = 'overview' | 'gpus' | 'workloads' | 'training' | 'models' | 'history' | 'alerts' | 'diagnostics' | 'settings'
 
@@ -431,6 +440,11 @@ function App() {
     }
   }
 
+  const requestFanAction = (action: PendingFanAction, activeSession: boolean) => {
+    if (activeSession) void executeFanAction(action, false)
+    else setPendingFanAction(action)
+  }
+
   return (
     <div className="cockpit-shell">
       <header className="command-bar">
@@ -554,7 +568,16 @@ function App() {
 
           </>
           ) : activeView === 'gpus' ? (
-            <GpuView collection={gpuCollection} history={gpuHistory} />
+            <GpuView
+              collection={gpuCollection}
+              history={gpuHistory}
+              session={actionSession}
+              fanStates={fanStates}
+              fanResult={fanActionResult}
+              busy={actionBusy}
+              onFanRequest={requestFanAction}
+              onFanRestore={restoreFanAutomatic}
+            />
           ) : activeView === 'workloads' || activeView === 'models' ? (
             <RuntimeView collection={runtimeCollection} gpuCollection={gpuCollection} />
           ) : activeView === 'history' ? (
@@ -572,10 +595,7 @@ function App() {
               fanResult={fanActionResult}
               busy={actionBusy}
               onRequest={setPendingPowerAction}
-              onFanRequest={(action, activeSession) => {
-                if (activeSession) void executeFanAction(action, false)
-                else setPendingFanAction(action)
-              }}
+              onFanRequest={requestFanAction}
               onFanRestore={restoreFanAutomatic}
             />
           ) : (
@@ -1058,16 +1078,43 @@ function Readout({ label, value, good = false }: { label: string; value: string;
   )
 }
 
-function GpuView({ collection, history }: { collection: GpuCollection | null; history: GpuHistory | null }) {
+function GpuView({
+  collection,
+  history,
+  session,
+  fanStates,
+  fanResult,
+  busy,
+  onFanRequest,
+  onFanRestore,
+}: {
+  collection: GpuCollection | null
+  history: GpuHistory | null
+  session: ActionSession | null
+  fanStates: FanControlStateCollection | null
+  fanResult: FanActionResult | null
+  busy: boolean
+  onFanRequest: (action: PendingFanAction, activeSession: boolean) => void
+  onFanRestore: (gpu: Gpu) => void
+}) {
   const gpus = collection?.gpus ?? []
+  const fanControls: GpuFanControls = {
+    enabled: Boolean(session?.actionsEnabled && session.fanControlEnabled && session.privilegedHelperAvailable),
+    restoreAvailable: Boolean(session?.privilegedHelperAvailable),
+    states: fanStates,
+    busy,
+    onRequest: onFanRequest,
+    onRestore: onFanRestore,
+  }
   return (
     <section className="telemetry-view" aria-label="NVIDIA GPU telemetry">
       <div className="view-titlebar">
         <div><span>GPU ARRAY // LIVE</span><h2>NVIDIA telemetry</h2></div>
         <div className="driver-readout"><small>DRIVER</small><strong>{collection?.driverVersion ?? '—'}</strong><small>NVML {collection?.libraryVersion ?? '—'}</small></div>
       </div>
+      {fanResult && <div className={`action-result action-result--${fanResult.result}`}><strong>{fanResult.state}</strong><span>{fanResult.detail}</span><small>AUDIT {fanResult.auditId}</small></div>}
       {gpus.length > 0
-        ? <GpuCardGrid gpus={gpus} history={history?.series} />
+        ? <GpuCardGrid gpus={gpus} history={history?.series} fanControls={fanControls} />
         : <div className="instrument-panel empty-view"><strong>NO GPU TELEMETRY</strong><span>{collection?.error ?? 'Collector is starting'}</span></div>}
     </section>
   )
@@ -1077,11 +1124,14 @@ function GpuCardGrid({
   gpus,
   history,
   compact = false,
+  fanControls,
 }: {
   gpus: Gpu[]
   history?: Record<string, GpuHistoryPoint[]>
   compact?: boolean
+  fanControls?: GpuFanControls
 }) {
+  const [selectedFan, setSelectedFan] = useState<Record<string, number>>({})
   return (
     <div className={`gpu-card-grid${compact ? ' gpu-card-grid--compact' : ''}`}>
       {gpus.map((gpu) => {
@@ -1105,10 +1155,76 @@ function GpuCardGrid({
               <span><small>MEM CLK</small><strong>{formatMetric(gpu.memoryClockMhz, ' MHz')}</strong></span>
               <span><small>LIMIT</small><strong>{formatMetric(gpu.powerLimitWatts, ' W')}</strong></span>
             </div>
+            {fanControls && (
+              <GpuFanControlDeck
+                gpu={gpu}
+                controls={fanControls}
+                selectedDuty={selectedFan[gpu.id]}
+                onDutyChange={(duty) => setSelectedFan(values => ({ ...values, [gpu.id]: duty }))}
+              />
+            )}
           </article>
         )
       })}
     </div>
+  )
+}
+
+function GpuFanControlDeck({
+  gpu,
+  controls,
+  selectedDuty,
+  onDutyChange,
+}: {
+  gpu: Gpu
+  controls: GpuFanControls
+  selectedDuty?: number
+  onDutyChange: (duty: number) => void
+}) {
+  const fanMinimum = gpu.minimumFanSpeedPercent.value
+  const fanMaximum = gpu.maximumFanSpeedPercent.value
+  const activeFan = controls.states?.gpus.find(state => state.gpuId.toLowerCase() === gpu.id.toLowerCase())
+  const telemetryManual = gpu.fans.some(fan => fan.controlPolicy.value?.toLowerCase() === 'manual')
+  const rawDuty = selectedDuty ?? activeFan?.requestedDutyPercent ?? gpu.fanSpeedPercent.value ?? fanMinimum ?? 0
+  const duty = Math.round(Math.min(fanMaximum ?? 100, Math.max(fanMinimum ?? 0, rawDuty)))
+  const fanReady = controls.enabled && fanMinimum !== null && fanMaximum !== null && gpu.slowdownTemperatureCelsius.value !== null
+  const policy = activeFan?.state ?? (telemetryManual ? 'MANUAL / UNOWNED' : 'NVIDIA AUTO')
+
+  return (
+    <section className="gpu-fan-deck" aria-label={`GPU ${gpu.displayIndex} fan controls`}>
+      <div className="gpu-fan-deck__status">
+        <span>FAN CONTROL // {activeFan ? 'WATCHDOG ACTIVE' : 'GUARDED'}</span>
+        <strong>{duty}% MIN</strong>
+        <small>{policy}{activeFan ? ` · ${activeFan.leaseRemainingSeconds}s LEASE` : ''}</small>
+      </div>
+      <input
+        aria-label={`GPU ${gpu.displayIndex} fan minimum`}
+        disabled={!fanReady || controls.busy}
+        max={fanMaximum ?? 100}
+        min={fanMinimum ?? 0}
+        onChange={(event) => onDutyChange(Number(event.target.value))}
+        step="1"
+        type="range"
+        value={duty}
+      />
+      <div className="control-actions fan-actions gpu-fan-actions">
+        <button
+          disabled={controls.busy || !fanReady || (Boolean(activeFan) && activeFan?.requestedDutyPercent === duty)}
+          onClick={() => controls.onRequest({ gpu, duty }, Boolean(activeFan))}
+          type="button"
+        >
+          {activeFan ? 'APPLY' : 'ENABLE'} {duty}% MIN
+        </button>
+        <button
+          disabled={controls.busy || !controls.restoreAvailable || (!activeFan && !telemetryManual)}
+          onClick={() => controls.onRestore(gpu)}
+          type="button"
+        >
+          NVIDIA AUTO
+        </button>
+      </div>
+      <small className="gpu-fan-deck__note">Manual duty is a watchdog-protected minimum; thermal ramp remains active.</small>
+    </section>
   )
 }
 

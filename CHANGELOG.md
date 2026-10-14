@@ -6,6 +6,7 @@ The project follows semantic versioning after its first tagged release.
 
 ## Unreleased
 
+- Added compact per-GPU fan controls to the GPU telemetry tab, reusing the guarded watchdog session, one-time safety acknowledgement, and NVIDIA automatic-policy restoration flow.
 - Added read-only NVIDIA NVML telemetry for GPU identity, VRAM, utilization, temperature, power, fans, and clocks.
 - Added explicit llama.cpp endpoint monitoring with health, model, context, slot, and Windows PID correlation.
 - Replaced the static cockpit GPU and workload placeholders with live visual cards.

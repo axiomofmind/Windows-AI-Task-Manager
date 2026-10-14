@@ -2,7 +2,7 @@
 
 AI Task Manager is a native Windows dashboard for monitoring local NVIDIA GPUs and AI inference workloads. It combines GPU telemetry, running model information, llama.cpp runtime details, history, alerts, and guarded hardware controls in a single cockpit-style interface.
 
-> **Alpha software:** `0.1.0-alpha` is unsigned and intended for evaluation. Monitoring is the primary supported use case. NVIDIA power and GPU fan controls are experimental.
+> **Alpha software:** `0.1.0-alpha.1` is unsigned and intended for evaluation. Monitoring is the primary supported use case. NVIDIA power and GPU fan controls are experimental.
 
 ![AI Task Manager overview showing NVIDIA GPUs, thermal capacity, VRAM capacity, and detected llama.cpp workloads](docs/assets/ai-task-manager-overview.png)
 
