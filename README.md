@@ -57,9 +57,21 @@ The portable release includes the .NET runtime. Users do not need to install the
 2. Verify the ZIP checksum.
 3. Extract the complete ZIP to a normal folder. Do not run it from inside the archive.
 4. Open `AITaskManager.Desktop.exe` as a standard user.
-5. Accept the Windows unsigned-application warning if it appears.
+5. Follow the SmartScreen instructions below if Windows displays an unsigned-application warning.
 
 Do not move the executable out of its extracted folder; it relies on the supporting files beside it.
+
+### Windows Defender SmartScreen
+
+This alpha is not yet code-signed, so Windows may identify its publisher as **Unknown publisher** and display **Windows protected your PC**. Only continue if you downloaded the ZIP from this repository's official [Releases](https://github.com/axiomofmind/Windows-AI-Task-Manager/releases) page and its SHA-256 checksum matches the accompanying `.sha256` file.
+
+To start the verified download:
+
+1. Select **More info** on the SmartScreen window.
+2. Confirm that the app is `AITaskManager.Desktop.exe`.
+3. Select **Run anyway**.
+
+Do not disable SmartScreen globally. If **Run anyway** is unavailable, a Windows or organization security policy may prohibit unsigned applications; respect that policy and do not work around it.
 
 Closing the main window sends AI Task Manager to the notification area by default. Use **Exit** from the tray menu to shut down collection and restore any app-owned hardware session cleanly.
 
