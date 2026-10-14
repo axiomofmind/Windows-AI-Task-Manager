@@ -6,6 +6,7 @@ The project follows semantic versioning after its first tagged release.
 
 ## Unreleased
 
+- Restored the dashboard window with a single left-click on the notification-area icon while preserving the right-click menu.
 - Added compact per-GPU fan controls to the GPU telemetry tab, reusing the guarded watchdog session, one-time safety acknowledgement, and NVIDIA automatic-policy restoration flow.
 - Added read-only NVIDIA NVML telemetry for GPU identity, VRAM, utilization, temperature, power, fans, and clocks.
 - Added explicit llama.cpp endpoint monitoring with health, model, context, slot, and Windows PID correlation.

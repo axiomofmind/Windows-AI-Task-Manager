@@ -179,7 +179,13 @@ public partial class MainWindow : Window
             Text = "AI Task Manager — collection running",
             Visible = true,
         };
-        icon.DoubleClick += (_, _) => Dispatcher.Invoke(ShowFromTray);
+        icon.MouseClick += (_, eventArgs) =>
+        {
+            if (eventArgs.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                Dispatcher.Invoke(ShowFromTray);
+            }
+        };
         return icon;
     }
 
