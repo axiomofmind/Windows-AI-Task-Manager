@@ -265,6 +265,17 @@ const formatBytes = (bytes: number | undefined) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
+async function readActionResponse<T>(response: Response): Promise<T | { error?: string }> {
+  const body = await response.text()
+  if (!body) return { error: response.statusText || 'The action returned an empty response' }
+
+  try {
+    return JSON.parse(body) as T
+  } catch {
+    return { error: body }
+  }
+}
+
 function App() {
   const [summary, setSummary] = useState<Summary | null>(null)
   const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null)
@@ -284,12 +295,14 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController()
+    let refreshInFlight = false
 
     const refresh = async () => {
+      if (refreshInFlight) return
+      refreshInFlight = true
       try {
-        const [summaryResponse, diagnosticsResponse, gpuResponse, runtimeResponse, historyResponse, alertResponse, actionResponse, fanStateResponse] = await Promise.all([
+        const [summaryResponse, gpuResponse, runtimeResponse, historyResponse, alertResponse, actionResponse, fanStateResponse] = await Promise.all([
           fetch('/api/v1/summary', { signal: controller.signal }),
-          fetch('/api/v1/diagnostics', { signal: controller.signal }),
           fetch('/api/v1/gpus', { signal: controller.signal }),
           fetch('/api/v1/runtimes', { signal: controller.signal }),
           fetch('/api/v1/history/gpus?seconds=60', { signal: controller.signal }),
@@ -298,13 +311,12 @@ function App() {
           fetch('/api/v1/actions/gpu-fans/state', { signal: controller.signal }),
         ])
 
-        if (!summaryResponse.ok || !diagnosticsResponse.ok || !gpuResponse.ok || !runtimeResponse.ok || !historyResponse.ok || !alertResponse.ok || !actionResponse.ok || !fanStateResponse.ok) {
+        if (!summaryResponse.ok || !gpuResponse.ok || !runtimeResponse.ok || !historyResponse.ok || !alertResponse.ok || !actionResponse.ok || !fanStateResponse.ok) {
           throw new Error('Live telemetry request failed')
         }
 
-        const [summaryValue, diagnosticsValue, gpuValue, runtimeValue, historyValue, alertValue, actionValue, fanStateValue] = await Promise.all([
+        const [summaryValue, gpuValue, runtimeValue, historyValue, alertValue, actionValue, fanStateValue] = await Promise.all([
           summaryResponse.json() as Promise<Summary>,
-          diagnosticsResponse.json() as Promise<Diagnostics>,
           gpuResponse.json() as Promise<GpuCollection>,
           runtimeResponse.json() as Promise<RuntimeCollection>,
           historyResponse.json() as Promise<GpuHistory>,
@@ -313,7 +325,6 @@ function App() {
           fanStateResponse.json() as Promise<FanControlStateCollection>,
         ])
         setSummary(summaryValue)
-        setDiagnostics(diagnosticsValue)
         setGpuCollection(gpuValue)
         setRuntimeCollection(runtimeValue)
         setGpuHistory(historyValue)
@@ -324,11 +335,39 @@ function App() {
       } catch (error: unknown) {
         if (error instanceof DOMException && error.name === 'AbortError') return
         setConnection('offline')
+      } finally {
+        refreshInFlight = false
       }
     }
 
     void refresh()
     const timer = window.setInterval(() => void refresh(), 1000)
+    return () => {
+      window.clearInterval(timer)
+      controller.abort()
+    }
+  }, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    let refreshInFlight = false
+
+    const refreshDiagnostics = async () => {
+      if (refreshInFlight) return
+      refreshInFlight = true
+      try {
+        const response = await fetch('/api/v1/diagnostics', { signal: controller.signal })
+        if (!response.ok) throw new Error('Diagnostics request failed')
+        setDiagnostics(await response.json() as Diagnostics)
+      } catch (error: unknown) {
+        if (error instanceof DOMException && error.name === 'AbortError') return
+      } finally {
+        refreshInFlight = false
+      }
+    }
+
+    void refreshDiagnostics()
+    const timer = window.setInterval(() => void refreshDiagnostics(), 60_000)
     return () => {
       window.clearInterval(timer)
       controller.abort()
@@ -373,7 +412,7 @@ function App() {
           }),
         },
       )
-      const value = await response.json() as HardwareActionResult | { error?: string }
+      const value = await readActionResponse<HardwareActionResult>(response)
       if (!response.ok) throw new Error('error' in value ? value.error : 'Power action failed')
       setActionResult(value as HardwareActionResult)
       setPendingPowerAction(null)
@@ -408,7 +447,7 @@ function App() {
           idempotencyKey: crypto.randomUUID(),
         }),
       })
-      const value = await response.json() as FanActionResult | { error?: string }
+      const value = await readActionResponse<FanActionResult>(response)
       if (!response.ok) throw new Error('error' in value ? value.error : 'Fan action failed')
       setFanActionResult(value as FanActionResult)
       setPendingFanAction(null)
@@ -430,7 +469,7 @@ function App() {
         headers: { 'Content-Type': 'application/json', 'X-AITM-Action-Token': actionSession.token },
         body: JSON.stringify({ gpuId: gpu.id, idempotencyKey: crypto.randomUUID() }),
       })
-      const value = await response.json() as FanActionResult | { error?: string }
+      const value = await readActionResponse<FanActionResult>(response)
       if (!response.ok) throw new Error('error' in value ? value.error : 'Fan restoration failed')
       setFanActionResult(value as FanActionResult)
     } catch (error: unknown) {

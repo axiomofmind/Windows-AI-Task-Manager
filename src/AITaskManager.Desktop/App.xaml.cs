@@ -97,8 +97,14 @@ public partial class App : System.Windows.Application
         _isExiting = true;
         _window?.Hide();
         _window?.DisposeTrayIcon();
-        await StopHostAsync().ConfigureAwait(true);
-        Shutdown();
+        try
+        {
+            await StopHostAsync().ConfigureAwait(true);
+        }
+        finally
+        {
+            Shutdown();
+        }
     }
 
     protected override void OnSessionEnding(SessionEndingCancelEventArgs e)

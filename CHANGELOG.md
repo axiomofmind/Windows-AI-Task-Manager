@@ -6,6 +6,17 @@ The project follows semantic versioning after its first tagged release.
 
 ## Unreleased
 
+## 0.1.0-alpha.2 - 2026-10-17
+
+- Stopped live dashboard refreshes from overlapping and reduced full diagnostics polling from every second to once per minute.
+- Cached SQLite integrity results after startup and replaced shared-cache table locking with private WAL connections, eliminating fan-action audit failures under telemetry load.
+- Suppressed noisy framework request logs and capped active log files at 5 MB with a single rotated predecessor.
+- Replaced the thread-affine fan ownership mutex with a cross-process file lock that can be released safely after asynchronous watchdog work.
+- Hardened fan-session restoration and disposal when the elevated helper closes its pipe immediately after restoring NVIDIA automatic control.
+- Made hardware-action responses tolerate empty or non-JSON server errors instead of surfacing a misleading JSON parsing failure.
+
+## 0.1.0-alpha.1 - 2026-10-13
+
 - Restored the dashboard window with a single left-click on the notification-area icon while preserving the right-click menu.
 - Added compact per-GPU fan controls to the GPU telemetry tab, reusing the guarded watchdog session, one-time safety acknowledgement, and NVIDIA automatic-policy restoration flow.
 - Added read-only NVIDIA NVML telemetry for GPU identity, VRAM, utilization, temperature, power, fans, and clocks.

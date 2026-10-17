@@ -373,7 +373,7 @@ public sealed class FanControlService : IHostedService, IAsyncDisposable
             CancellationToken.None).ConfigureAwait(false);
     }
 
-    private static async Task<FanHelperReply> RestoreAndDisposeAsync(FanSession session, CancellationToken cancellationToken)
+    internal static async Task<FanHelperReply> RestoreAndDisposeAsync(FanSession session, CancellationToken cancellationToken)
     {
         try
         {
@@ -521,8 +521,10 @@ public sealed class FanControlService : IHostedService, IAsyncDisposable
 
     private sealed record CachedFanAction(string Signature, FanControlActionResponse Response);
 
-    private sealed class FanSession : IAsyncDisposable
+    internal sealed class FanSession : IAsyncDisposable
     {
+        private int _disposed;
+
         public FanSession(string gpuId, string secret, int requestedDuty, Process process, PipeStream pipe, StreamReader reader, StreamWriter writer)
         { GpuId = gpuId; Secret = secret; RequestedDuty = requestedDuty; Process = process; Pipe = pipe; Reader = reader; Writer = writer; LastReply = new(true, "connecting", null, null, 0, "Connecting to elevated watchdog."); }
         public string GpuId { get; }
@@ -538,6 +540,29 @@ public sealed class FanControlService : IHostedService, IAsyncDisposable
         public void Update(FanHelperReply reply) { LastReply = reply; ObservedAt = DateTimeOffset.UtcNow; }
         public void MarkFaulted(string detail) => Update(new(false, "faulted", LastReply.AppliedDutyPercent, LastReply.TemperatureCelsius, 0, detail));
         public FanControlStateResponse ToState() => new(GpuId, LastReply.State, RequestedDuty, LastReply.AppliedDutyPercent, LastReply.TemperatureCelsius, LastReply.LeaseRemainingSeconds, ObservedAt, LastReply.Detail);
-        public async ValueTask DisposeAsync() { await Writer.DisposeAsync().ConfigureAwait(false); Reader.Dispose(); Pipe.Dispose(); Process.Dispose(); Gate.Dispose(); }
+        public async ValueTask DisposeAsync()
+        {
+            if (Interlocked.Exchange(ref _disposed, 1) != 0)
+            {
+                return;
+            }
+
+            try
+            {
+                await Writer.DisposeAsync().ConfigureAwait(false);
+            }
+            catch (Exception exception) when (exception is IOException or ObjectDisposedException)
+            {
+                // The helper exits immediately after acknowledging restore, so its end of the
+                // duplex pipe can be closed before StreamWriter performs its final flush.
+            }
+            finally
+            {
+                Reader.Dispose();
+                Pipe.Dispose();
+                Process.Dispose();
+                Gate.Dispose();
+            }
+        }
     }
 }

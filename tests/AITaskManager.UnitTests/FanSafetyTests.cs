@@ -128,6 +128,28 @@ public sealed class FanSafetyTests
         }
     }
 
+    [Fact]
+    public async Task OwnershipLockCanBeReleasedFromAnAsyncContinuation()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "AITaskManager.Tests", Guid.NewGuid().ToString("N"));
+        const string gpuId = "GPU-lock-test";
+        try
+        {
+            var ownership = FanOwnershipLock.TryAcquire(gpuId, root);
+            Assert.NotNull(ownership);
+            Assert.Null(FanOwnershipLock.TryAcquire(gpuId, root));
+
+            await Task.Run(ownership.Dispose);
+
+            using var reacquired = FanOwnershipLock.TryAcquire(gpuId, root);
+            Assert.NotNull(reacquired);
+        }
+        finally
+        {
+            if (Directory.Exists(root)) Directory.Delete(root, recursive: true);
+        }
+    }
+
     private sealed class FaultInjectingNvmlApi(int fanCount) : INvmlApi
     {
         public uint[] Policies { get; } = new uint[fanCount];

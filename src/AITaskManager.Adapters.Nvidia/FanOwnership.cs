@@ -6,44 +6,33 @@ namespace AITaskManager.Adapters.Nvidia;
 
 internal sealed class FanOwnershipLock : IDisposable
 {
-    private readonly Mutex _mutex;
-    private bool _owned;
+    private FileStream? _lockStream;
 
-    private FanOwnershipLock(Mutex mutex)
+    private FanOwnershipLock(FileStream lockStream)
     {
-        _mutex = mutex;
-        _owned = true;
+        _lockStream = lockStream;
     }
 
-    public static FanOwnershipLock? TryAcquire(string gpuId)
+    public static FanOwnershipLock? TryAcquire(string gpuId, string? rootDirectory = null)
     {
-        var mutex = new Mutex(false, $"Global\\AITaskManager.Fan.{FanOwnershipJournal.Key(gpuId)}");
+        var lockPath = FanOwnershipJournal.LockPathFor(gpuId, rootDirectory);
+        Directory.CreateDirectory(Path.GetDirectoryName(lockPath)!);
         try
         {
-            if (!mutex.WaitOne(TimeSpan.Zero))
-            {
-                mutex.Dispose();
-                return null;
-            }
+            var stream = new FileStream(
+                lockPath,
+                FileMode.OpenOrCreate,
+                FileAccess.ReadWrite,
+                FileShare.None);
+            return new FanOwnershipLock(stream);
         }
-        catch (AbandonedMutexException)
+        catch (IOException)
         {
-            // Ownership transferred to this caller; recovery runs before any new write.
+            return null;
         }
-
-        return new FanOwnershipLock(mutex);
     }
 
-    public void Dispose()
-    {
-        if (_owned)
-        {
-            _owned = false;
-            _mutex.ReleaseMutex();
-        }
-
-        _mutex.Dispose();
-    }
+    public void Dispose() => Interlocked.Exchange(ref _lockStream, null)?.Dispose();
 }
 
 internal static class FanOwnershipJournal
@@ -83,6 +72,9 @@ internal static class FanOwnershipJournal
 
     internal static string PathFor(string gpuId, string? rootDirectory = null) =>
         Path.Combine(JournalDirectory(rootDirectory), $"{Key(gpuId)}.json");
+
+    internal static string LockPathFor(string gpuId, string? rootDirectory = null) =>
+        Path.Combine(JournalDirectory(rootDirectory), $"{Key(gpuId)}.lock");
 
     private static string JournalDirectory(string? rootDirectory) => rootDirectory is null
         ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AITaskManager", "fan-ownership")

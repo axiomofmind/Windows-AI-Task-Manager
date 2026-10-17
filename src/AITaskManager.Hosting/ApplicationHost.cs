@@ -68,6 +68,8 @@ public static class ApplicationHost
 
         var redactor = new SensitiveDataRedactor();
         builder.Logging.ClearProviders();
+        builder.Logging.AddFilter("Microsoft.AspNetCore", LogLevel.Warning);
+        builder.Logging.AddFilter("Microsoft.Hosting", LogLevel.Warning);
         builder.Logging.AddProvider(new RedactingLoggerProvider(
             redactor,
             paths.LogDirectory,

@@ -1,10 +1,12 @@
 using AITaskManager.Application;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace AITaskManager.Hosting;
 
 public sealed class RedactingLoggerProvider : ILoggerProvider
 {
+    private const long MaximumLogFileBytes = 5 * 1024 * 1024;
     private readonly ISensitiveDataRedactor _redactor;
     private readonly string _logDirectory;
     private readonly int _retentionDays;
@@ -41,8 +43,26 @@ public sealed class RedactingLoggerProvider : ILoggerProvider
         {
             Console.WriteLine(rendered);
             var logPath = Path.Combine(_logDirectory, $"aitaskmanager-{timestamp:yyyyMMdd}.log");
-            File.AppendAllText(logPath, rendered + Environment.NewLine);
+            var entry = rendered + Environment.NewLine;
+            RotateIfNeeded(logPath, Encoding.UTF8.GetByteCount(entry));
+            File.AppendAllText(logPath, entry);
         }
+    }
+
+    private static void RotateIfNeeded(string logPath, int incomingBytes)
+    {
+        if (!File.Exists(logPath) || new FileInfo(logPath).Length + incomingBytes <= MaximumLogFileBytes)
+        {
+            return;
+        }
+
+        var previousPath = Path.ChangeExtension(logPath, "previous.log");
+        if (File.Exists(previousPath))
+        {
+            File.Delete(previousPath);
+        }
+
+        File.Move(logPath, previousPath);
     }
 
     private void DeleteExpiredLogs()

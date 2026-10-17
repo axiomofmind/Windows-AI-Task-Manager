@@ -14,6 +14,8 @@ public sealed class SqliteDatabase
     public const int CurrentSchemaVersion = 1;
 
     private readonly string _connectionString;
+    private readonly SemaphoreSlim _integrityGate = new(1, 1);
+    private string? _cachedIntegrity;
 
     public SqliteDatabase(string databasePath)
     {
@@ -24,7 +26,7 @@ public sealed class SqliteDatabase
         {
             DataSource = DatabasePath,
             Mode = SqliteOpenMode.ReadWriteCreate,
-            Cache = SqliteCacheMode.Shared,
+            Cache = SqliteCacheMode.Private,
             Pooling = false,
             DefaultTimeout = 5,
         }.ToString();
@@ -68,6 +70,8 @@ public sealed class SqliteDatabase
         {
             await ApplyVersionOneAsync(connection, cancellationToken).ConfigureAwait(false);
         }
+
+        _ = await GetCachedIntegrityAsync(connection, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<DatabaseStatus> GetStatusAsync(CancellationToken cancellationToken = default)
@@ -78,10 +82,7 @@ public sealed class SqliteDatabase
             "SELECT COALESCE(MAX(version), 0) FROM schema_migrations;",
             cancellationToken).ConfigureAwait(false);
 
-        var integrity = await ExecuteScalarAsync<string>(
-            connection,
-            "PRAGMA integrity_check;",
-            cancellationToken).ConfigureAwait(false) ?? "unknown";
+        var integrity = await GetCachedIntegrityAsync(connection, cancellationToken).ConfigureAwait(false);
 
         var journalMode = await ExecuteScalarAsync<string>(
             connection,
@@ -95,6 +96,38 @@ public sealed class SqliteDatabase
             integrity,
             size,
             string.Equals(journalMode, "wal", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task<string> GetCachedIntegrityAsync(
+        SqliteConnection connection,
+        CancellationToken cancellationToken)
+    {
+        var cached = Volatile.Read(ref _cachedIntegrity);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
+        await _integrityGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            cached = Volatile.Read(ref _cachedIntegrity);
+            if (cached is not null)
+            {
+                return cached;
+            }
+
+            cached = await ExecuteScalarAsync<string>(
+                connection,
+                "PRAGMA integrity_check;",
+                cancellationToken).ConfigureAwait(false) ?? "unknown";
+            Volatile.Write(ref _cachedIntegrity, cached);
+            return cached;
+        }
+        finally
+        {
+            _integrityGate.Release();
+        }
     }
 
     public async Task<string?> GetMetadataAsync(string key, CancellationToken cancellationToken = default)
