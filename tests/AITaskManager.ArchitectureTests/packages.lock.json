@@ -4,18 +4,18 @@
     "net10.0": {
       "coverlet.collector": {
         "type": "Direct",
-        "requested": "[6.0.4, )",
-        "resolved": "6.0.4",
-        "contentHash": "lkhqpF8Pu2Y7IiN7OntbsTtdbpR1syMsm2F3IgX6ootA4ffRqWL5jF7XipHuZQTdVuWG/gVAAcf8mjk8Tz0xPg=="
+        "requested": "[10.1.0, )",
+        "resolved": "10.1.0",
+        "contentHash": "SlYCIHnBYxINSUpR75SiM5JEmnx11pqT+Ac/C/fUqTTA0dLPl9eYzmFXKKuxmQhL3ZdTQl4PBD3YdAxAauaKLQ=="
       },
       "Microsoft.NET.Test.Sdk": {
         "type": "Direct",
-        "requested": "[17.14.1, )",
-        "resolved": "17.14.1",
-        "contentHash": "HJKqKOE+vshXra2aEHpi2TlxYX7Z9VFYkr+E5rwEvHC8eIXiyO+K9kNm8vmNom3e2rA56WqxU+/N9NJlLGXsJQ==",
+        "requested": "[18.11.0, )",
+        "resolved": "18.11.0",
+        "contentHash": "xf/bR0LNkhK0SnadDRlZIQmC4sac5Wk0e1WAdiQjRN3MSo6gQ9M2c4c1XRNnVGjfOvckh704W5CJ19AL0/Xsdg==",
         "dependencies": {
-          "Microsoft.CodeCoverage": "17.14.1",
-          "Microsoft.TestPlatform.TestHost": "17.14.1"
+          "Microsoft.CodeCoverage": "18.11.0",
+          "Microsoft.TestPlatform.TestHost": "18.11.0"
         }
       },
       "xunit": {
@@ -31,41 +31,35 @@
       },
       "xunit.runner.visualstudio": {
         "type": "Direct",
-        "requested": "[3.1.4, )",
-        "resolved": "3.1.4",
-        "contentHash": "5mj99LvCqrq3CNi06xYdyIAXOEh+5b33F2nErCzI5zWiDdLHXiPXEWFSUAF8zlIv0ZWqjZNCwHTQeAPYbF3pCg=="
+        "requested": "[4.0.1, )",
+        "resolved": "4.0.1",
+        "contentHash": "8CoAaZkniVekR1ycJyxn+hOz+6ZQCDPcoIsIs6ujd4WyFcBMlxGNU15Qb8Uxd4iO4UmOuETb0M6vzBbwX/mfLA=="
       },
       "Microsoft.CodeCoverage": {
         "type": "Transitive",
-        "resolved": "17.14.1",
-        "contentHash": "pmTrhfFIoplzFVbhVwUquT+77CbGH+h4/3mBpdmIlYtBi9nAB+kKI6dN3A/nV4DFi3wLLx/BlHIPK+MkbQ6Tpg=="
+        "resolved": "18.11.0",
+        "contentHash": "MhN9wpvL1Es4hfIYslrsVgIsUdDFxuOBTbAl9mGIMvFo8PP5CLf4DrGdNrfwWSyn0lqi6sssm+I/qkkLL3MU+g=="
       },
       "Microsoft.Data.Sqlite.Core": {
         "type": "Transitive",
-        "resolved": "10.0.13",
-        "contentHash": "Gge8XsSCOwcbkbdmt2UDAe6kIv9Q0vA6yb3wsTStjjexaMFLTWfc/1gH4kbhJ+zWiXRTRA4lG2sOQNVfir204w==",
+        "resolved": "10.0.14",
+        "contentHash": "1p9rO3Q2X/L/9YrYog3vaDzi8u+WZfJCOkDYoHqmofqYP0DLPLPyZcS2Rnh/79JXAodgbs1AgsaNwLpIvC3Xew==",
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.13"
         }
       },
       "Microsoft.TestPlatform.ObjectModel": {
         "type": "Transitive",
-        "resolved": "17.14.1",
-        "contentHash": "xTP1W6Mi6SWmuxd3a+jj9G9UoC850WGwZUps1Wah9r1ZxgXhdJfj1QqDLJkFjHDCvN42qDL2Ps5KjQYWUU0zcQ=="
+        "resolved": "18.11.0",
+        "contentHash": "BXBHYnwSOljKute8UYCMXOLAdB7awxEMppPSpqOF1ZxLD/W/OH+vTBgFaXA7q0aditJTVXSMVenel+wOkEIyNg=="
       },
       "Microsoft.TestPlatform.TestHost": {
         "type": "Transitive",
-        "resolved": "17.14.1",
-        "contentHash": "d78LPzGKkJwsJXAQwsbJJ7LE7D1wB+rAyhHHAaODF+RDSQ0NgMjDFkSA1Djw18VrxO76GlKAjRUhl+H8NL8Z+Q==",
+        "resolved": "18.11.0",
+        "contentHash": "AKjwKpyRBwoQFQmpcchtoYlfJEBlaY/40uxBRi+qXP4NR7xT8t+XTJtOyEyumfvfJcH5pASs75LwNdXYRr4XNA==",
         "dependencies": {
-          "Microsoft.TestPlatform.ObjectModel": "17.14.1",
-          "Newtonsoft.Json": "13.0.3"
+          "Microsoft.TestPlatform.ObjectModel": "18.11.0"
         }
-      },
-      "Newtonsoft.Json": {
-        "type": "Transitive",
-        "resolved": "13.0.3",
-        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
       },
       "SQLitePCLRaw.bundle_e_sqlite3": {
         "type": "Transitive",
@@ -96,8 +90,8 @@
       },
       "System.CodeDom": {
         "type": "Transitive",
-        "resolved": "10.0.13",
-        "contentHash": "rTW3WGWYugm9qMihqSXXHxAIVP9Ay4ASkYc8CJLDbuscbc88lpO8U/asZpeYb9GiXbD8wNDhRoV5b2JEbHmtow=="
+        "resolved": "10.0.14",
+        "contentHash": "oJYTzyBcc2g06mU699LaJfm964mdlFg6l7BPeqdu8bmK6Fdy9fL9BWugGsZAqWtjnNWp4tanZZ9DlZwHJmmhgg=="
       },
       "xunit.abstractions": {
         "type": "Transitive",
@@ -142,35 +136,35 @@
       "aitaskmanager.adapters.llamacpp": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Core": "[0.1.0-alpha, )"
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Core": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.adapters.lmstudio": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Core": "[0.1.0-alpha, )"
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Core": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.adapters.nvidia": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Core": "[0.1.0-alpha, )"
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Core": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.adapters.training": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Core": "[0.1.0-alpha, )"
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Core": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.application": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Core": "[0.1.0-alpha, )"
+          "AITaskManager.Core": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.contracts": {
@@ -182,68 +176,68 @@
       "aitaskmanager.fanhelper": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Contracts": "[0.1.0-alpha, )"
+          "AITaskManager.Contracts": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.hosting": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Adapters.LlamaCpp": "[0.1.0-alpha, )",
-          "AITaskManager.Adapters.Nvidia": "[0.1.0-alpha, )",
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Contracts": "[0.1.0-alpha, )",
-          "AITaskManager.Infrastructure.Windows": "[0.1.0-alpha, )",
-          "AITaskManager.Persistence": "[0.1.0-alpha, )"
+          "AITaskManager.Adapters.LlamaCpp": "[0.1.0-alpha.2, )",
+          "AITaskManager.Adapters.Nvidia": "[0.1.0-alpha.2, )",
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Contracts": "[0.1.0-alpha.2, )",
+          "AITaskManager.Infrastructure.Windows": "[0.1.0-alpha.2, )",
+          "AITaskManager.Persistence": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.infrastructure.windows": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Core": "[0.1.0-alpha, )",
-          "System.Management": "[10.0.13, )",
-          "System.Security.Cryptography.ProtectedData": "[10.0.13, )"
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Core": "[0.1.0-alpha.2, )",
+          "System.Management": "[10.0.14, )",
+          "System.Security.Cryptography.ProtectedData": "[10.0.14, )"
         }
       },
       "aitaskmanager.persistence": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Core": "[0.1.0-alpha, )",
-          "Microsoft.Data.Sqlite": "[10.0.13, )"
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Core": "[0.1.0-alpha.2, )",
+          "Microsoft.Data.Sqlite": "[10.0.14, )"
         }
       },
       "aitaskmanager.service": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Hosting": "[0.1.0-alpha, )"
+          "AITaskManager.Hosting": "[0.1.0-alpha.2, )"
         }
       },
       "Microsoft.Data.Sqlite": {
         "type": "CentralTransitive",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "w37nz3WFmDtRfXxWEwIXX2OgqDRiwhD1JGbFwfpFCF8GkCrV/yO6Y2JF5058J2RGoI2sCcdn02wrk0yEcekWcw==",
+        "requested": "[10.0.14, )",
+        "resolved": "10.0.14",
+        "contentHash": "muyroan6rKrf0omZL8UF7Kw5uOGp/yBg1L/XWvkFN3WhKaNtK2IWqRZw93nIwVqjhTVDO0l4CEGhHIh+mb+sKg==",
         "dependencies": {
-          "Microsoft.Data.Sqlite.Core": "10.0.13",
+          "Microsoft.Data.Sqlite.Core": "10.0.14",
           "SQLitePCLRaw.bundle_e_sqlite3": "2.1.13",
           "SQLitePCLRaw.core": "2.1.13"
         }
       },
       "System.Management": {
         "type": "CentralTransitive",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "cL8qiJmJtlSIcAoZH4s07VTxTdddvEP12MFeM+KBZagn4CuD/0SFQsmKn5g9MLfiSrYjdAxIwOTO0kATY9A0UA==",
+        "requested": "[10.0.14, )",
+        "resolved": "10.0.14",
+        "contentHash": "ywAltakc72Oe7liNatclpyq8oiLYx0VMSjQvphlsbPbiQ9glrV3JKvn5M2xFbsOzzh8sV3QAiUdmu2AV/ffN7Q==",
         "dependencies": {
-          "System.CodeDom": "10.0.13"
+          "System.CodeDom": "10.0.14"
         }
       },
       "System.Security.Cryptography.ProtectedData": {
         "type": "CentralTransitive",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "aUSmC6cPjFLSE0rDTsmkR3wvUOnscqewebOaaELEToh12sNmoltZqT3f0C81mJ1zhxKjWco25soHTvYwsXCsUw=="
+        "requested": "[10.0.14, )",
+        "resolved": "10.0.14",
+        "contentHash": "UuaBUHgmtc9h6CMxaQqFDDJxkS5JVy7XEB+DbtCvD68GFcVM9/AccuNwFpARx8nwCnvjaxzoOBjG3gPz32P1Eg=="
       }
     },
     "net10.0/win-x64": {
@@ -254,11 +248,11 @@
       },
       "System.Management": {
         "type": "CentralTransitive",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "cL8qiJmJtlSIcAoZH4s07VTxTdddvEP12MFeM+KBZagn4CuD/0SFQsmKn5g9MLfiSrYjdAxIwOTO0kATY9A0UA==",
+        "requested": "[10.0.14, )",
+        "resolved": "10.0.14",
+        "contentHash": "ywAltakc72Oe7liNatclpyq8oiLYx0VMSjQvphlsbPbiQ9glrV3JKvn5M2xFbsOzzh8sV3QAiUdmu2AV/ffN7Q==",
         "dependencies": {
-          "System.CodeDom": "10.0.13"
+          "System.CodeDom": "10.0.14"
         }
       }
     }

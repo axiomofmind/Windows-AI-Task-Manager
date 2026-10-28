@@ -4,14 +4,14 @@
     "net10.0-windows7.0": {
       "Microsoft.Web.WebView2": {
         "type": "Direct",
-        "requested": "[1.0.4258.31, )",
-        "resolved": "1.0.4258.31",
-        "contentHash": "sHVZ2MQrHT1J3q5/6csn0fIP27rzpTO/RRC+wPQDrZheB7T4t2n+vVbY6SdCKr4WRV9s/gmBM3PPMWWJtoDzMg=="
+        "requested": "[1.0.4314.35, )",
+        "resolved": "1.0.4314.35",
+        "contentHash": "x5MFf2W03xueU1mMNvivXfHSsQ+ODo7vJ36qw/dLtU5Gs+8d7+7N7zzmNNDoT3ffosmcvZNBtUnlzyiDUuBkSQ=="
       },
       "Microsoft.Data.Sqlite.Core": {
         "type": "Transitive",
-        "resolved": "10.0.13",
-        "contentHash": "Gge8XsSCOwcbkbdmt2UDAe6kIv9Q0vA6yb3wsTStjjexaMFLTWfc/1gH4kbhJ+zWiXRTRA4lG2sOQNVfir204w==",
+        "resolved": "10.0.14",
+        "contentHash": "1p9rO3Q2X/L/9YrYog3vaDzi8u+WZfJCOkDYoHqmofqYP0DLPLPyZcS2Rnh/79JXAodgbs1AgsaNwLpIvC3Xew==",
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.13"
         }
@@ -46,21 +46,21 @@
       "aitaskmanager.adapters.llamacpp": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Core": "[0.1.0-alpha, )"
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Core": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.adapters.nvidia": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Core": "[0.1.0-alpha, )"
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Core": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.application": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Core": "[0.1.0-alpha, )"
+          "AITaskManager.Core": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.contracts": {
@@ -72,37 +72,37 @@
       "aitaskmanager.hosting": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Adapters.LlamaCpp": "[0.1.0-alpha, )",
-          "AITaskManager.Adapters.Nvidia": "[0.1.0-alpha, )",
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Contracts": "[0.1.0-alpha, )",
-          "AITaskManager.Infrastructure.Windows": "[0.1.0-alpha, )",
-          "AITaskManager.Persistence": "[0.1.0-alpha, )"
+          "AITaskManager.Adapters.LlamaCpp": "[0.1.0-alpha.2, )",
+          "AITaskManager.Adapters.Nvidia": "[0.1.0-alpha.2, )",
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Contracts": "[0.1.0-alpha.2, )",
+          "AITaskManager.Infrastructure.Windows": "[0.1.0-alpha.2, )",
+          "AITaskManager.Persistence": "[0.1.0-alpha.2, )"
         }
       },
       "aitaskmanager.infrastructure.windows": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Core": "[0.1.0-alpha, )",
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Core": "[0.1.0-alpha.2, )",
           "System.Management": "[10.0.13, )"
         }
       },
       "aitaskmanager.persistence": {
         "type": "Project",
         "dependencies": {
-          "AITaskManager.Application": "[0.1.0-alpha, )",
-          "AITaskManager.Core": "[0.1.0-alpha, )",
-          "Microsoft.Data.Sqlite": "[10.0.13, )"
+          "AITaskManager.Application": "[0.1.0-alpha.2, )",
+          "AITaskManager.Core": "[0.1.0-alpha.2, )",
+          "Microsoft.Data.Sqlite": "[10.0.14, )"
         }
       },
       "Microsoft.Data.Sqlite": {
         "type": "CentralTransitive",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "w37nz3WFmDtRfXxWEwIXX2OgqDRiwhD1JGbFwfpFCF8GkCrV/yO6Y2JF5058J2RGoI2sCcdn02wrk0yEcekWcw==",
+        "requested": "[10.0.14, )",
+        "resolved": "10.0.14",
+        "contentHash": "muyroan6rKrf0omZL8UF7Kw5uOGp/yBg1L/XWvkFN3WhKaNtK2IWqRZw93nIwVqjhTVDO0l4CEGhHIh+mb+sKg==",
         "dependencies": {
-          "Microsoft.Data.Sqlite.Core": "10.0.13",
+          "Microsoft.Data.Sqlite.Core": "10.0.14",
           "SQLitePCLRaw.bundle_e_sqlite3": "2.1.13",
           "SQLitePCLRaw.core": "2.1.13"
         }
@@ -117,9 +117,9 @@
     "net10.0-windows7.0/win-x64": {
       "Microsoft.Web.WebView2": {
         "type": "Direct",
-        "requested": "[1.0.4258.31, )",
-        "resolved": "1.0.4258.31",
-        "contentHash": "sHVZ2MQrHT1J3q5/6csn0fIP27rzpTO/RRC+wPQDrZheB7T4t2n+vVbY6SdCKr4WRV9s/gmBM3PPMWWJtoDzMg=="
+        "requested": "[1.0.4314.35, )",
+        "resolved": "1.0.4314.35",
+        "contentHash": "x5MFf2W03xueU1mMNvivXfHSsQ+ODo7vJ36qw/dLtU5Gs+8d7+7N7zzmNNDoT3ffosmcvZNBtUnlzyiDUuBkSQ=="
       },
       "SQLitePCLRaw.lib.e_sqlite3": {
         "type": "Transitive",
